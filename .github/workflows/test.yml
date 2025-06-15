@@ -1,34 +1,23 @@
-name: Test Suite
+name: Tests
 
 on:
-  workflow_dispatch:
-  # push:
-  # pull_request:
-
-env:
-  FOUNDRY_PROFILE: ci
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  test:
-    name: Foundry Project
+  tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: stable
+          version: nightly
 
-      - name: Build
-        run: |
-          forge --version
-          forge build --sizes
-        id: build
-
-      - name: Test
-        run: |
-          forge test -vvv
-        id: test
+      - name: Run tests
+        run: forge test -vvv
